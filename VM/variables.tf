@@ -31,7 +31,7 @@ variable "Public_IP" {
 
 
 variable "VM" {
-  type = object({
+  type = list(object({
     name = string,
     size = optional(string),
 
@@ -51,7 +51,7 @@ variable "VM" {
     admin_username                  = optional(string),
     disable_password_authentication = optional(bool),
 
-  })
+  }))
 
 }
 
