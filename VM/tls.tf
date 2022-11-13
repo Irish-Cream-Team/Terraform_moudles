@@ -20,4 +20,7 @@ resource "azurerm_key_vault_secret" "secret" {
     "belongs_to_user" = "${var.VM.name}",
     "belongs_to_team" = "${var.team_name}",
   }
+  depends_on = [
+    data.azurerm_key_vault.azvault
+  ]
 }
