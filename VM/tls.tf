@@ -7,7 +7,7 @@ resource "tls_private_key" "vm-tls-key" {
 
 data "azurerm_key_vault" "azvault" {
   name                = "valut4yesodot"
-  resource_group_name = "devops"
+  resource_group_name = "terraform"
 }
 
 resource "azurerm_key_vault_secret" "secret" {
