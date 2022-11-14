@@ -4,7 +4,7 @@ resource "azurerm_linux_virtual_machine" "user_vm" {
   location              = var.location
   resource_group_name   = var.team_name
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
-  size                  = coalesce(var.VM.size, "Standard_D2s_v3")
+  size                  = coalesce(var.VM.size, "Standard_D4s_v3")
   priority              = "Spot"
   eviction_policy       = "Deallocate"
 
