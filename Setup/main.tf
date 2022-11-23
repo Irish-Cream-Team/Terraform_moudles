@@ -19,13 +19,14 @@ resource "azurerm_subnet" "team_subnet" {
   name                 = coalesce(var.Subnet.name, var.team_name)
   virtual_network_name = data.azurerm_virtual_network.global_vnet.name
   address_prefixes     = [cidrsubnet(data.azurerm_virtual_network.global_vnet.address_space[0], 11, length(data.azurerm_virtual_network.global_vnet.subnets))]
-  resource_group_name  = data.azurerm_virtual_network.global_vnet.resource_group_name
+  resource_group_name  = data.azurerm_virtual_network.globagitl_vnet.resource_group_name
 
   depends_on = [
     data.azurerm_virtual_network.global_vnet
   ]
   #   tags = var.tags   
 }
+
 
 resource "azurerm_resource_group" "team_resource_group" {
   name     = var.team_name
