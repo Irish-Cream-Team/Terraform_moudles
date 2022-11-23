@@ -3,12 +3,16 @@ data "azurerm_virtual_network" "global_vnet" {
   resource_group_name = var.global_resource_group_name
 }
 
-data "azurerm_subnet" "last_subnet"{
-    name = data.azurerm_virtual_network.global_vnet.subnets[length(data.azurerm_virtual_network.global_vnet.subnets)-1]
-    resource_group_name = var.global_resource_group_name
-    virtual_network_name = data.azurerm_virtual_network.global_vnet.name
-    }
+data "azurerm_subnet" "last_subnet" {
+  name                 = data.azurerm_virtual_network.global_vnet.subnets[length(data.azurerm_virtual_network.global_vnet.subnets) - 1]
+  resource_group_name  = var.global_resource_group_name
+  virtual_network_name = data.azurerm_virtual_network.global_vnet.name
+}
 
+data "azurerm_dns_zone" "yesodot_dns" {
+  name                = "branch-yesodot.org"
+  resource_group_name = "yesodotaks"
+}
 
 # Create subnet
 resource "azurerm_subnet" "team_subnet" {
@@ -20,7 +24,7 @@ resource "azurerm_subnet" "team_subnet" {
   depends_on = [
     data.azurerm_virtual_network.global_vnet
   ]
-  #   tags = var.tags
+  #   tags = var.tags   
 }
 
 resource "azurerm_resource_group" "team_resource_group" {
@@ -29,3 +33,9 @@ resource "azurerm_resource_group" "team_resource_group" {
   #tags     = var.tags
 }
 
+# create child zone
+resource "azurerm_dns_zone" "child_zone" {
+  name                = "${var.team_name}.${data.azurerm_dns_zone.yesodot_dns.name}"
+  resource_group_name = azurerm_resource_group.team_resource_group.name
+
+}
