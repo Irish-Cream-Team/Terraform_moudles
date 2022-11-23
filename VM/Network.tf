@@ -64,7 +64,9 @@ resource "azurerm_dns_a_record" "vm_ip" {
   zone_name           = data.azurerm_dns_zone.child_zone.name
   resource_group_name = var.team_name
   ttl                 = 300
-  records             = [azurerm_public_ip.vm_ip.ip_address]
+  target_resource_id  = azurerm_public_ip.vm_ip.id
+
   #tags                = var.tags
   depends_on = [azurerm_public_ip.vm_ip]
 }
+
