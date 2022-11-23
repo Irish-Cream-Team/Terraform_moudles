@@ -44,3 +44,27 @@ resource "azurerm_network_interface_security_group_association" "example" {
   depends_on = [data.azurerm_network_security_group.network_nsg, azurerm_network_interface.vm_nic]
   #tags       = var.tags
 }
+
+data "azurerm_dns_zone" "yesodot_dns" {
+  name                = "branch-yesodot.org"
+  resource_group_name = "yesodotaks"
+}
+
+
+# create child zone
+data "azurerm_dns_zone" "child_zone" {
+  name                = "${var.team_name}.${data.azurerm_dns_zone.yesodot_dns.name}"
+  resource_group_name = var.team_name
+
+}
+
+# Alias record for the public IP
+resource "azurerm_dns_a_record" "vm_ip" {
+  name                = var.VM.name
+  zone_name           = data.azurerm_dns_zone.child_zone.name
+  resource_group_name = var.team_name
+  ttl                 = 300
+  records             = [azurerm_public_ip.vm_ip.ip_address]
+  #tags                = var.tags
+  depends_on = [azurerm_public_ip.vm_ip]
+}
