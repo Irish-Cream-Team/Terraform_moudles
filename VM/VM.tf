@@ -30,6 +30,10 @@ resource "azurerm_linux_virtual_machine" "user_vm" {
     username   = "azureuser"
     public_key = tls_private_key.vm-tls-key.public_key_openssh
   }
-  #tags = var.tags
+  tags = merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
 }
 

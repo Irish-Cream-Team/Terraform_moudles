@@ -12,5 +12,10 @@ output "vm_username" {
 
 
 output "vm_admin_username" {
-  value = azurerm_linux_virtual_machine.user_vm.admin_username
+  value = azurerm_linux_virtual_machine.user_vm
+}
+
+
+output "vm_dns" {
+    value = azurerm_dns_a_record.vm_ip
 }

@@ -17,7 +17,12 @@ resource "azurerm_public_ip" "vm_ip" {
 
   name              = coalesce(var.Public_IP.name, "${var.VM.name}-public-ip")
   allocation_method = coalesce(var.Public_IP.allocation_method, "Dynamic")
-  #tags              = var.tags
+  tags              =  merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
+
 }
 
 # Create network interface
@@ -31,7 +36,12 @@ resource "azurerm_network_interface" "vm_nic" {
     private_ip_address_allocation = try(var.Network_Interface.ip_configuration.private_ip_address_allocation, "Dynamic")
     public_ip_address_id          = azurerm_public_ip.vm_ip.id
   }
-  #tags = var.tags
+  tags       =  merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
+
   depends_on = [data.azurerm_subnet.team_subnet, azurerm_public_ip.vm_ip]
 }
 
@@ -42,7 +52,12 @@ resource "azurerm_network_interface_security_group_association" "example" {
 
 
   depends_on = [data.azurerm_network_security_group.network_nsg, azurerm_network_interface.vm_nic]
-  #tags       = var.tags
+  tags       =  merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
+
 }
 
 data "azurerm_dns_zone" "yesodot_dns" {
@@ -66,7 +81,12 @@ resource "azurerm_dns_a_record" "vm_ip" {
   ttl                 = 300
   target_resource_id  = azurerm_public_ip.vm_ip.id
 
-  #tags                = var.tags
+  tags       =  merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
+
   depends_on = [azurerm_public_ip.vm_ip]
 }
 

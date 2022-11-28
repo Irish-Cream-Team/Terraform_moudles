@@ -15,11 +15,13 @@ resource "azurerm_key_vault_secret" "secret" {
   value        = tls_private_key.vm-tls-key.private_key_openssh
   key_vault_id = data.azurerm_key_vault.azvault.id
   content_type = "application/x-pem-file"
-  tags = {
+  tags = merge({
     "belongs_to_vm"   = "${var.VM.name}",
     "belongs_to_user" = "${var.VM.name}",
     "belongs_to_team" = "${var.team_name}",
-  }
+  }, var.tags)
+
+
   depends_on = [
     data.azurerm_key_vault.azvault
   ]

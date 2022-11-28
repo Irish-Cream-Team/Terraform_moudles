@@ -15,20 +15,28 @@ data "azurerm_subnet" "last_subnet" {
 resource "azurerm_subnet" "team_subnet" {
   name                 = coalesce(var.Subnet.name, var.team_name)
   virtual_network_name = data.azurerm_virtual_network.global_vnet.name
-  address_prefixes     = [cidrsubnet(data.azurerm_virtual_network.global_vnet.address_space[0], 11, length(data.azurerm_virtual_network.global_vnet.subnets)+1)]
+  address_prefixes     = [cidrsubnet(data.azurerm_virtual_network.global_vnet.address_space[0], 11, length(data.azurerm_virtual_network.global_vnet.subnets) + 1)]
   resource_group_name  = data.azurerm_virtual_network.global_vnet.resource_group_name
 
   depends_on = [
     data.azurerm_virtual_network.global_vnet
   ]
-  #   tags = var.tags   
+  tags = merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
 }
 
 
 resource "azurerm_resource_group" "team_resource_group" {
   name     = var.team_name
   location = var.location
-  #tags     = var.tags
+  tags = merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
 }
 
 
@@ -50,7 +58,11 @@ resource "azurerm_dns_ns_record" "child" {
   zone_name           = lower(data.azurerm_dns_zone.yesodot_dns.name)
   resource_group_name = "yesodotaks"
   ttl                 = 300
-  #   tags                = var.tags
+  tags = merge({
+    "belongs_to_vm"   = "${var.VM.name}",
+    "belongs_to_user" = "${var.VM.name}",
+    "belongs_to_team" = "${var.team_name}",
+  }, var.tags)
 
   records = azurerm_dns_zone.child_zone.name_servers
   depends_on = [
