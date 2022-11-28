@@ -22,8 +22,6 @@ resource "azurerm_subnet" "team_subnet" {
     data.azurerm_virtual_network.global_vnet
   ]
   tags = merge({
-    "belongs_to_vm"   = "${var.VM.name}",
-    "belongs_to_user" = "${var.VM.name}",
     "belongs_to_team" = "${var.team_name}",
   }, var.tags)
 }
@@ -33,8 +31,6 @@ resource "azurerm_resource_group" "team_resource_group" {
   name     = var.team_name
   location = var.location
   tags = merge({
-    "belongs_to_vm"   = "${var.VM.name}",
-    "belongs_to_user" = "${var.VM.name}",
     "belongs_to_team" = "${var.team_name}",
   }, var.tags)
 }
@@ -59,8 +55,6 @@ resource "azurerm_dns_ns_record" "child" {
   resource_group_name = "yesodotaks"
   ttl                 = 300
   tags = merge({
-    "belongs_to_vm"   = "${var.VM.name}",
-    "belongs_to_user" = "${var.VM.name}",
     "belongs_to_team" = "${var.team_name}",
   }, var.tags)
 
