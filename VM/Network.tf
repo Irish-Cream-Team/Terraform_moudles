@@ -52,11 +52,6 @@ resource "azurerm_network_interface_security_group_association" "example" {
 
 
   depends_on = [data.azurerm_network_security_group.network_nsg, azurerm_network_interface.vm_nic]
-  tags       =  merge({
-    "belongs_to_vm"   = "${var.VM.name}",
-    "belongs_to_user" = "${var.VM.name}",
-    "belongs_to_team" = "${var.team_name}",
-  }, var.tags)
 
 }
 
