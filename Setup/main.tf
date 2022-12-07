@@ -13,9 +13,10 @@ data "azurerm_subnet" "last_subnet" {
 
 # Create subnet
 resource "azurerm_subnet" "team_subnet" {
+  count                = contains(data.azurerm_virtual_network.global_vnet.subnets, coalesce(var.Subnet.name, var.team_name)) ? 0 : 1
   name                 = coalesce(var.Subnet.name, var.team_name)
   virtual_network_name = data.azurerm_virtual_network.global_vnet.name
-  address_prefixes     = [cidrsubnet(data.azurerm_virtual_network.global_vnet.address_space[0], 11, length(data.azurerm_virtual_network.global_vnet.subnets)+1)]
+  address_prefixes     = [cidrsubnet(data.azurerm_virtual_network.global_vnet.address_space[0], 11, length(data.azurerm_virtual_network.global_vnet.subnets) + 1)]
   resource_group_name  = data.azurerm_virtual_network.global_vnet.resource_group_name
 
   depends_on = [
