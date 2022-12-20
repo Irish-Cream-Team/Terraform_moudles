@@ -3,11 +3,6 @@ data "azurerm_virtual_network" "global_vnet" {
   resource_group_name = var.global_resource_group_name
 }
 
-data "azurerm_subnet" "last_subnet" {
-  name                 = data.azurerm_virtual_network.global_vnet.subnets[length(data.azurerm_virtual_network.global_vnet.subnets) - 1]
-  resource_group_name  = var.global_resource_group_name
-  virtual_network_name = data.azurerm_virtual_network.global_vnet.name
-}
 
 
 
